@@ -14,6 +14,7 @@ import { resolveEntityColor } from '@craft-agent/shared/colors'
 import { useTheme } from '@/context/ThemeContext'
 import { useDynamicStack } from '@/hooks/useDynamicStack'
 import type { SessionStatus } from '@/config/session-status-config'
+import { resolveStatusDisplayLabel } from '@/config/session-status-config'
 import { getState } from '@/config/session-status-config'
 import { SessionStatusMenu } from '@/components/ui/session-status-menu'
 import { MetadataBadge } from '@/components/ui/metadata-badge'
@@ -345,10 +346,7 @@ function StateBadge({
   const badgeColor = state.resolvedColor || 'var(--foreground)'
   const applyColor = state.iconColorable
 
-  const DEFAULT_STATUS_IDS = new Set(['backlog', 'todo', 'needs-review', 'done', 'cancelled'])
-  // Only apply i18n translation when the user hasn't customized the label.
-  const defaultLabel = DEFAULT_STATUS_IDS.has(state.id) ? t(`status.${state.id}`) : null
-  const stateLabel = defaultLabel && state.label === defaultLabel ? t(`status.${state.id}`, state.label) : state.label
+  const stateLabel = resolveStatusDisplayLabel(state, t)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

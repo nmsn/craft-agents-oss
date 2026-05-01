@@ -30,6 +30,7 @@ import { useFocusContext } from "@/context/FocusContext"
 import { sendToWorkspaceAtom, type SessionMeta } from "@/atoms/sessions"
 import type { ViewConfig } from "@craft-agent/shared/views"
 import type { SessionStatusId, SessionStatus } from "@/config/session-status-config"
+import { resolveStatusDisplayLabel } from "@/config/session-status-config"
 import { buildCollapsedGroupsScopeSuffix } from "@/utils/session-list-collapse"
 
 export interface SessionListRow {
@@ -311,10 +312,7 @@ export function SessionList({
         const collapsedMeta = collapsedGroupsMeta.find(m => m.key === key)
         orderedGroups.push({
           key,
-          label: (() => {
-            const defaultLabel = t(`status.${state.id}`)
-            return defaultLabel && state.label === defaultLabel ? t(`status.${state.id}`, state.label) : state.label
-          })(),
+          label: resolveStatusDisplayLabel(state, t),
           items: groupRows,
           collapsible: true,
           ...(collapsedMeta ? { collapsedCount: collapsedMeta.count } : {}),
